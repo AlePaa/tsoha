@@ -1,0 +1,73 @@
+.graybody { 
+    background-color: #f7f7f7;
+}
+.greenback {
+    background-color: green;
+}
+
+table, th, td {
+    border: 1px solid bisque;
+    background-color: white;
+} 
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    height: 50px;
+    color: white;
+}
+td {
+    text-align: center;
+    padding: 10px;
+}
+
+.nav a {
+    color: #5a5a5a;
+    font-size: 11px;
+    font-weight: bold;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-transform: uppercase;
+}
+
+.nav li {
+    display: inline;
+}
+.rightul {
+    text-align: right;
+}
+
+.attempt {
+}
+
+.attempt h1 {
+    color: #fff;
+    font-size: 48px;  
+    font-family: 'Shift', sans-serif;
+    font-weight: bold;
+}
+
+.attempt p {
+    font-size: 20px;
+    color: #fff;
+}
+
+.attempt table {
+    font-size: 16px;}
+
+.contempt {
+}
+
+.contempt h3 {
+    font-family: 'Shift', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.contempt a {
+    color: #00b0ff
+}
