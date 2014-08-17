@@ -6,7 +6,7 @@ class User {
     private $username;
     private $password;
 
-    public function __construct(int $id, string $u, string $p) {
+    public function __construct($id, $u, $p) {
         $this->id = $id;
         $this->username = $u;
         $this->password = $p;
@@ -16,7 +16,7 @@ class User {
         $connection = getDbConnection();
         $query = $connection->prepare('SELECT id FROM Users WHERE nick = ? AND password = ?');
 
-        if ($query->execute($u, $p)) {
+        if ($query->execute(array($u, $p))) {
             return $query->fetchColumn();
         } else {
             return null;
@@ -24,16 +24,14 @@ class User {
     }
 
     public static function getAllUsers() {
+
         $sql = "SELECT id, nick, password FROM Users";
         $query = getDbConnection()->prepare($sql);
         $query->execute();
+
         $results = array();
         foreach ($query->fetchAll(PDO::FETCH_OBJ) as $result) {
-            $user = new User();
-            $user->setId($result->id);
-            $user->setNick($result->nick);
-            $user->setPassword($result->password);
-
+            $user = new User($result->id, $result->nick, $result->password);
             $results[] = $user;
         }
         return $results;

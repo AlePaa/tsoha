@@ -7,7 +7,7 @@
         <div class="nav">
             <ul class="rightul">
                 <li>Demogorgon</li>
-                <li><a href="../index.php">Logout</a></li>
+                <li><a href="#">Logout</a></li>
             </ul>
             <ul>
                 <li><a href="tasksdemo.php">Tasks</a></li>

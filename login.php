@@ -1,7 +1,6 @@
 <?php
 
 require_once 'libs/common.php';
-require_once 'libs/dbconnection.php';
 include 'libs/models/UserModel.php';
 
 if (isset($_GET['login'])) {
@@ -33,5 +32,6 @@ function checkValidInput() {
 }
 
 function logout() {
-    
+    unset($_SESSION["logged"]);
+    redirect('index.php?logout');
 }

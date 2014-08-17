@@ -1,21 +1,3 @@
-<html>
-    <head>
-        <title>Categories</title>
-        <link href="../css/main.css" rel="stylesheet">
-    </head>
-    <body class="graybody">
-        <div class="nav">
-            <ul class="rightul">
-                <li>Demogorgon</li>
-                <li><a href="#">Logout</a></li>
-            </ul>
-            <ul>
-                <li><a href="tasksdemo.php">Tasks</a></li>
-                <li><a href="categoriesdemo.php">Categories</a></li>
-                <li><a href="prioritiesdemo.php">Priorities</a></li>
-            </ul>
-
-        </div>
         <h1>Listing priorities</h1>
         <div class="attempt">
 
@@ -41,4 +23,3 @@
                 </tbody>
             </table>
         </div>
-    </body>

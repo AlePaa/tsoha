@@ -5,13 +5,15 @@ require_once 'libs/common.php';
 $data = array("title" => "Log in to Muistilista");
 
 if (isset($_GET['noname'])) {
-    $data['error'] = "Please enter a username";
+    $data['notify'] = "Please enter a username";
 } else if (isset($_GET['nopwd'])) {
-    $data['error'] = "Please enter a password";
+    $data['notify'] = "Please enter a password";
 } else if (isset($_GET['loginfail'])) {
-    $data['error'] = "Invalid username or password";
+    $data['notify'] = "Invalid username or password";
 } else if (isset($_GET['nologin'])) {
-    $data['error'] = "Need to be logged in to access page";
+    $data['notify'] = "Need to be logged in to access page";
+} else if (isset($_GET['logout'])) {
+    $data['notify'] = "Bye!";
 }
 
 showView('loginview', $data);
