@@ -3,20 +3,23 @@
 class User {
 
     private $id;
-    private $nick;
+    private $username;
     private $password;
 
-    public function __construct($id, $nick, $password) {
+    public function __construct(int $id, string $u, string $p) {
         $this->id = $id;
-        $this->nick = $nick;
-        $this->password = $password;
+        $this->username = $u;
+        $this->password = $p;
     }
 
-    public function verifyLogin() {
-        if ($this->nick == "pleishouldaa" && $this->pword == "juttu") {
-            return true;
+    public static function verifyLogin($u, $p) {
+        $connection = getDbConnection();
+        $query = $connection->prepare('SELECT id FROM Users WHERE nick = ? AND password = ?');
+
+        if ($query->execute($u, $p)) {
+            return $query->fetchColumn();
         } else {
-            return false;
+            return null;
         }
     }
 
@@ -24,7 +27,6 @@ class User {
         $sql = "SELECT id, nick, password FROM Users";
         $query = getDbConnection()->prepare($sql);
         $query->execute();
-
         $results = array();
         foreach ($query->fetchAll(PDO::FETCH_OBJ) as $result) {
             $user = new User();
@@ -32,8 +34,6 @@ class User {
             $user->setNick($result->nick);
             $user->setPassword($result->password);
 
-            //$array[] = $muuttuja; lisää muuttujan arrayn perään. 
-            //Se vastaa melko suoraan ArrayList:in add-metodia.
             $results[] = $user;
         }
         return $results;
@@ -43,16 +43,20 @@ class User {
         $this->id = $i;
     }
 
-    private function setNick($n) {
-        $this->nick = $n;
+    private function setUsername($n) {
+        $this->username = $n;
     }
 
     private function setPassword($p) {
         $this->password = $p;
     }
 
-    public function getNick() {
-        return $this->nick;
+    public function getUsername() {
+        return $this->username;
+    }
+
+    public function getId() {
+        return $this->id;
     }
 
 }

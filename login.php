@@ -1,25 +1,37 @@
 <?php
 
-if (empty($_POST["username"])) {
-    showView("login", array(
-        'error' => "Login failed! You did not enter a username.",
-    ));
-}
-$user = $_POST["username"];
+require_once 'libs/common.php';
+require_once 'libs/dbconnection.php';
+include 'libs/models/UserModel.php';
 
-if (empty($_POST["password"])) {
-    showView("login", array(
-        'user' => $user,
-        'error' => "Login failed! You did not enter a password.",
-    ));
+if (isset($_GET['login'])) {
+    login();
+} else if (isset($_GET['logout'])) {
+    logout();
 }
-$password = $_POST["password"];
 
-if ($user == 'rakettimies' && password == 'nestekaasu') {
-    header('Location: views/tasksview.php');
-} else {
-    showView("login", array(
-        'user' => $user,
-        'error' => "Login failed! Invalid username or password.", request
-    ));
+function login() {
+    checkValidInput();
+    $userid = User::verifyLogin($_POST['username'], $_POST['password']);
+    if ($userid != NULL) {
+        $_SESSION['logged'] = $userid;
+        redirect('tasks.php');
+    } else {
+        redirect('index.php?loginfail');
+    }
+}
+
+function checkValidInput() {
+    if (empty($_POST['username'])) {
+        redirect("index.php?noname");
+    }
+
+    if (empty($_POST['password'])) {
+        redirect("index.php?nopwd");
+        exit();
+    }
+}
+
+function logout() {
+    
 }

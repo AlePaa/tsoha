@@ -2,14 +2,14 @@
 
 Class Task {
 
-    private $userid;
     private $name;
-    private $id;
     private $description;
+    private $priority;
 
-    public function __construct($name, $desc) {
-        $this->name = $name;
-        $this->description = $desc;
+    public function __construct($n, $d, $p) {
+        $this->name = $n;
+        $this->description = $d;
+        $this->priority = $p;
     }
 
     public function getTaskList() {
@@ -19,6 +19,30 @@ Class Task {
 
     public function getTask($taskname) {
         return getTaskList()[$taskname];
+    }
+
+    public function setName($n) {
+        $this->name = $n;
+    }
+
+    public function setDescription($d) {
+        $this->description = $d;
+    }
+
+    public function setPriority($p) {
+        $this->priority = $p;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getDescription() {
+        return $this->description;
+    }
+
+    public function getPriority() {
+        
     }
 
 }
