@@ -4,7 +4,7 @@ require_once 'libs/common.php';
 
 if (checkLogin()) {
     $user = $_SESSION['logged'];
-    showView('categoriesview');
+    showView('newtaskform');
 } else {
     redirect('index.php?nologin');
-} 
+}

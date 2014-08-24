@@ -1,7 +1,6 @@
 <?php
 
 require_once 'libs/common.php';
-include'libs/models/PriorityModel';
 
 if (checkLogin()) {
     $user = $_SESSION['logged'];

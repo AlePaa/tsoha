@@ -31,8 +31,7 @@ class User {
 
         $results = array();
         foreach ($query->fetchAll(PDO::FETCH_OBJ) as $result) {
-            $user = new User($result->id, $result->nick, $result->password);
-            $results[] = $user;
+            $results[] = new User($result->id, $result->nick, $result->password);
         }
         return $results;
     }

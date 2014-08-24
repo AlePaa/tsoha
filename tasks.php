@@ -1,13 +1,12 @@
 <?php
 
 require_once 'libs/common.php';
-include'libs/models/TaskModel';
-include'libs/models/CategoryModel';
-include'libs/models/PriorityModel';
+require 'libs/models/TaskModel.php';
 
 if (checkLogin()) {
     $user = $_SESSION['logged'];
-    showView('tasksview');
+    $tasks = Task::getUserTasks($user);
+    showView('tasksview', array('tasks' => $tasks));
 } else {
     redirect('index.php?nologin');
 }
