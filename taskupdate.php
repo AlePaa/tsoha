@@ -1,9 +1,11 @@
 <?php
 
+require_once 'libs/common.php';
+require_once 'libs/session.php';
+
 $id = (int) $_POST['id'];
 
 $task = Task::findTask($id);
-$user = $_SESSION('logged');
 
 if ($task == NULL) {
     

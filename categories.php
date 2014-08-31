@@ -1,10 +1,8 @@
 <?php
 
 require_once 'libs/common.php';
+require_once 'libs/session.php';
+require 'libs/models/CategoryModel.php';
 
-if (checkLogin()) {
-    $user = $_SESSION['logged'];
-    showView('categoriesview');
-} else {
-    redirect('index.php?nologin');
-} 
+$categories = Category::getUserCategories($user);
+showView('categoriesview', array('title' => "Categories", 'categories' => $categories));

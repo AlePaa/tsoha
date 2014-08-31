@@ -12,6 +12,16 @@ class User {
         $this->password = $p;
     }
 
+    public function insertIntoDb() {
+        $sql = "INSERT INTO Users(id, nick, password) VALUES(?,?,?) RETURNING id";
+        $query = getDbConnection()->prepare($sql);
+        $ok = $query->execute(array($this->id, $this->username, $this->password));
+        if ($ok) {
+            $this->id = $query->fetchColumn();
+        }
+        return $ok;
+    }
+
     public static function verifyLogin($u, $p) {
         $connection = getDbConnection();
         $query = $connection->prepare('SELECT id FROM Users WHERE nick = ? AND password = ?');
@@ -36,18 +46,18 @@ class User {
         return $results;
     }
 
-    private function setId($i) {
-        $this->id = $i;
-    }
+    /**   private function setId($i) {
+      $this->id = $i;
+      }
 
-    private function setUsername($n) {
-        $this->username = $n;
-    }
+      private function setUsername($n) {
+      $this->username = $n;
+      }
 
-    private function setPassword($p) {
-        $this->password = $p;
-    }
-
+      private function setPassword($p) {
+      $this->password = $p;
+      } */
+    
     public function getUsername() {
         return $this->username;
     }

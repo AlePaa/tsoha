@@ -4,11 +4,11 @@
     <form action='taskcreate.php' method='POST'>
 
         <label for="name" >Name:</label>
-        <input type="text" name="name" id="name" />
+        <input type="text" name="name" id="name" autofocus/>
 
         <label>Priority:</label>
         <select name="priority">
-            <option>Kriittinen</option>
+           
         </select>
 
         <label>Category:</label>
@@ -16,8 +16,11 @@
             <option>Tsoha</option>
         </select>
         <p>
-            <label for="textarea">Description:</label>
-            <textarea type="txtarea" name="description" cols="80" rows="5"></textarea>
+            <label for="description">Description:</label>
+            <textarea type="txtarea" name="description" id='description' cols="80" rows="5"></textarea>
+        <p>
+            <label for="deadline">Deadline: </label>
+            <input type="date" name='deadline' id='deadline'/> 
 
             <button type="submit">Create</button>
     </form>

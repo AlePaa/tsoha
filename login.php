@@ -16,22 +16,29 @@ function login() {
         $_SESSION['logged'] = $userid;
         redirect('tasks.php');
     } else {
-        redirect('index.php?loginfail');
+        showView('loginview', array('notify' => "Invalid username or password",
+            'title' => 'login to Muistilista'));
+        exit();
     }
 }
 
 function checkValidInput() {
     if (empty($_POST['username'])) {
-        redirect("index.php?noname");
+        showView('loginview', array('notify' => "Please enter a username",
+            'title' => 'login to Muistilista'));
+        exit();
     }
 
     if (empty($_POST['password'])) {
-        redirect("index.php?nopwd");
+        showView('loginview', array('notify' => "Please enter a password",
+            'title' => 'login to Muistilista'));
         exit();
     }
 }
 
 function logout() {
     unset($_SESSION["logged"]);
-    redirect('index.php?logout');
+    showView('loginview', array('notify' => "Bye!",
+        'title' => 'login to Muistilista'));
+    exit();
 }

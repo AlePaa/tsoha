@@ -1,10 +1,6 @@
 <?php
 
 require_once 'libs/common.php';
+require_once 'libs/session.php';
 
-if (checkLogin()) {
-    $user = $_SESSION['logged'];
-    showView('newtaskform');
-} else {
-    redirect('index.php?nologin');
-}
+showView('newtaskform', array('title' => 'Create new Task'));

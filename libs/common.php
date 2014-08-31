@@ -12,11 +12,3 @@ function redirect($page) {
     header("Location: $page");
     exit();
 }
-
-function checkLogin() {
-    if (isset($_SESSION['logged'])) {
-        return true;
-    } else {
-        return false;
-    }
-}
