@@ -6,8 +6,6 @@ Class Task extends Model {
 
     private $category;
     private $priority;
-    private $categoryName;
-    private $priorityName;
     private $deadline;
 
     public function __construct() {
@@ -26,7 +24,7 @@ Class Task extends Model {
     public function update() {
         $sql = "UPDATE Tasks SET name = ?, description = ?, category_id = ?, priority_id = ?, deadline = ? WHERE id = ?";
         $query = getDbConnection()->prepare($sql);
-        $ok = $query->execute($this->getName(), $this->getDescription(), $this->getId());
+        $ok = $query->execute(array($this->name, $this->description, $this->category, $this->priority, $this->deadline, $this->id));
         if ($ok) {
             $this->id = $query->fetchColumn();
             return $ok;
@@ -55,7 +53,7 @@ Class Task extends Model {
     public static function findTask($taskid) {
         $query = getDbConnection()->prepare("SELECT * FROM Tasks WHERE id = '$taskid'");
         if ($query->execute()) {
-            $result = build($query->fetchColumn());
+            $result = Task::build($query->fetchObject());
             return $result;
         } else {
             return NULL;
@@ -63,9 +61,9 @@ Class Task extends Model {
     }
 
     public function insertIntoDb($userid) {
-        $sql = "INSERT INTO Tasks(user_id, category_id, priority_id, name, description, deadline) VALUES(?,1,1,?,?,CURRENT_DATE) RETURNING id";
+        $sql = "INSERT INTO Tasks(user_id, category_id, priority_id, name, description, deadline) VALUES(?,1,1,?,?,?) RETURNING id";
         $query = getDbConnection()->prepare($sql);
-        $ok = $query->execute(array($userid, $this->getName(), $this->getDescription()));
+        $ok = $query->execute(array($userid, $this->name, $this->description, $this->deadline));
         if ($ok) {
             $this->id = $query->fetchColumn();
         }
@@ -73,7 +71,7 @@ Class Task extends Model {
     }
 
     /* Task specific setters and getters */
-    
+
     public function setCategory($c) {
         if (empty($c)) {
             
@@ -99,20 +97,22 @@ Class Task extends Model {
     }
 
     public function getCategory() {
-        $query = getDbConnection()->prepare("SELECT * FROM Categories WHERE id = '$this->category'");
-        $return = $query->execute();
+        $query = getDbConnection()->prepare("SELECT name FROM Categories WHERE id = '$this->category'");
+        $query->execute();
+        $return = $query->fetchColumn();
         return $return;
     }
 
     public function getPriority() {
-        $query = getDbConnection()->prepare("SELECT * FROM Priorities WHERE id = '$this->priority'");
-        $return = $query->execute();
+        $query = getDbConnection()->prepare("SELECT name FROM Priorities WHERE id = '$this->priority'");
+        $query->execute();
+        $return = $query->fetchColumn();
+
         return $return;
     }
 
     public function getDeadline() {
         return $this->deadline;
     }
-
 
 }

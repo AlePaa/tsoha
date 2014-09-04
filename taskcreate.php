@@ -8,6 +8,7 @@ $newTask = new Task();
 $newTask->setName($_POST['name']);
 $newTask->setDescription($_POST['description']);
 $newTask->setPriority($_POST['priority']);
+$newTask->setDeadline($_POST['deadline']);
 
 if ($newTask->isValid()) {
     $newTask->insertIntoDb($_SESSION['logged']);

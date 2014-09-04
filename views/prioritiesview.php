@@ -1,6 +1,6 @@
 <h1>Listing priorities</h1>
 <div class="attempt">
-
+    <a href="prioritynew.php">Create new priority</a>
     <table border="1" cellpadding="10px">
         <thead>
             <tr>

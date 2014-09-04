@@ -14,11 +14,11 @@
         <tbody>
             <?php foreach ($data->tasks as $task): ?>
                 <tr>
-                    <td><a href="?<?php echo $task->getId(); ?>"><?php echo htmlspecialchars($task->getName()); ?></a></td>
+                    <td><a href="taskedit.php?id=<?php echo $task->getId(); ?>"><?php echo htmlspecialchars($task->getName()); ?></a></td>
                     <td><?php echo htmlspecialchars($task->getPriority()); ?></td>
-                    <td>Tsoha</td>
+                    <td><?php echo htmlspecialchars($task->getCategory()); ?></td>
                     <td><?php echo htmlspecialchars($task->getDescription()); ?></td>
-                    <td>10.08.2014 (0 days left)</td>
+                    <td><?php echo htmlspecialchars($task->getDeadline()); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

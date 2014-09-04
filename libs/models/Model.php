@@ -67,8 +67,8 @@ class Model {
         return $this->errors;
     }
 
-    public function isOwner($userid) {
-        return ($userid == getUserId());
+    public function isOwner($userid, $id) {
+        return ($id == $this->id && $userid == $this->getUserId());
     }
 
 }
