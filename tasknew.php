@@ -8,6 +8,5 @@ showView('taskform', array('title' => 'Create new Task',
     'name' => '',
     'desc' => '',
     'dead' => '',
-    'add' => '',
     'header' => 'Create New Task',
     'button' => 'Create'));

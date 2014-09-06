@@ -46,18 +46,18 @@ class User {
         return $results;
     }
 
-    /**   private function setId($i) {
-      $this->id = $i;
-      }
+    private function setId($i) {
+        $this->id = $i;
+    }
 
-      private function setUsername($n) {
-      $this->username = $n;
-      }
+    private function setUsername($n) {
+        $this->username = $n;
+    }
 
-      private function setPassword($p) {
-      $this->password = $p;
-      } */
-    
+    private function setPassword($p) {
+        $this->password = $p;
+    }
+
     public function getUsername() {
         return $this->username;
     }

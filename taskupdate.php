@@ -8,10 +8,8 @@ $id = (int) $_GET['id'];
 
 $task = Task::findTask($id);
 
-if ($task == NULL) {
-    showView('');
-} else if (!$task->isOwner($user, $id)) {
-    
+if ($task == NULL || !$task->isOwner($user, $id)) {
+    redirect('tasks.php');
 } else {
     $task->setName($_POST['name']);
     $task->setDescription($_POST['description']);

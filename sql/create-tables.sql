@@ -34,5 +34,8 @@ deadline date default NULL,
 PRIMARY KEY(id)
 );
 
-
-
+CREATE TABLE ctjuncts (
+category_id bigint references categories(id) ON DELETE cascade,
+task_id bigint references taks(id) ON DELETE cascade,
+PRIMARY KEY(category_id, task_id)
+);

@@ -1,8 +1,9 @@
 <?php
 
 include 'Model.php';
+include 'DataObject.php';
 
-Class Task extends Model {
+Class Task extends Model implements DataObject {
 
     private $category;
     private $priority;

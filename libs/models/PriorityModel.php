@@ -10,11 +10,31 @@ Class Priority extends Model {
         
     }
 
-    private static function build($result) {
+    public static function build($result) {
         $new = new Priority();
         $new->builds($result);
         $new->setPriovalue($result->priovalue);
         return $new;
+    }
+
+    public function insertIntoDb($userid) {
+        $sql = "INSERT INTO priorities(user_id, name, description, priovalue) VALUES(?,?,?,?) RETURNING id";
+        $query = getDbConnection()->prepare($sql);
+        $ok = $query->execute(array($userid, $this->name, $this->description, $this->priovalue));
+        if ($ok) {
+            $this->id = $query->fetchColumn();
+        }
+        return $ok;
+    }
+
+    public function update() {
+        $sql = "UPDATE priorities SET name = ?, description = ?, priovalue = ? WHERE id = ?";
+        $query = getDbConnection()->prepare($sql);
+        $ok = $query->execute(array($this->name, $this->description, $this->priovalue, $this->id));
+        if ($ok) {
+            $this->id = $query->fetchColumn();
+            return $ok;
+        }
     }
 
     public function delete() {
@@ -39,7 +59,7 @@ Class Priority extends Model {
     public static function findPriority($prioid) {
         $query = getDbConnection()->prepare("SELECT * FROM Priorities WHERE id = '$prioid'");
         if ($query->execute()) {
-            $result = build($query->fetchColumn());
+            $result = Priority::build($query->fetchObject());
             return $result;
         } else {
             return NULL;
@@ -47,8 +67,11 @@ Class Priority extends Model {
     }
 
     /* Priority specific setter and getter */
-    
-    private function setPriovalue($p) {
+
+    public function setPriovalue($p) {
+        if ($p < 0) {
+        $this->errors[] = "Priority value can't be negative";    
+        }
         $this->priovalue = $p;
     }
 

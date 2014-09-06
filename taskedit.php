@@ -20,7 +20,6 @@ if (!$task == NULL && $task->isOwner($_SESSION['logged'], $taskid)) {
         'desc' => htmlspecialchars($task->getDescription()),
         'dead' => htmlspecialchars($task->getDeadline()),
         'header' => 'Editing Task',
-        'add' => '<button type="submit" action="taskdelete.php?id=$taskid">Delete</button>',
         'button' => 'Update'));
 } else {
     notFound();

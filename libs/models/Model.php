@@ -38,7 +38,7 @@ class Model {
     }
 
     public function setDescription($d) {
-        $this->description = $d;
+        $this->description = trim($d);
     }
 
     public function getId() {
@@ -67,8 +67,11 @@ class Model {
         return $this->errors;
     }
 
-    public function isOwner($userid, $id) {
-        return ($id == $this->id && $userid == $this->getUserId());
+    /* Checks if the userid given as a parameter matches
+     * with the userid of the object
+     * returns true if it does, else false */
+    public function isOwner($userid) {
+        return ($userid == $this->getUserId());
     }
 
 }

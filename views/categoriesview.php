@@ -1,6 +1,6 @@
-<h1>Listing categories</h1>
+<h1 class="page-header">Listing categories</h1>
 <div class="attempt">
-    <a href="categorynew.php">Create new category</a>
+    <a class="btn btn-default" href="categorynew.php">New</a>
     <table border="1" cellpadding="10px">
         <thead>
             <tr>
@@ -12,9 +12,13 @@
         <tbody>
             <?php foreach ($data->categories as $category): ?>
                 <tr>
-                    <td><a href="#"><?php echo $category->getName(); ?></a></td>
-                    <td><?php echo $category->getPriority(); ?></td>
-                    <td><?php echo $category->getDescription(); ?></td>
+                    <td><?php echo htmlspecialchars($category->getName()); ?></td>
+                    <td><?php echo htmlspecialchars($category->getPriority()); ?></td>
+                    <td><?php echo htmlspecialchars($category->getDescription()); ?></td>
+                    <td>
+                        <a class="btn btn-default" href="categoryedit.php?id=<?php echo $category->getId(); ?>">Edit</a>
+                        <a class="btn btn-danger" href="categorydelete.php?id=<?php echo $category->getId(); ?>">Delete</a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

@@ -11,9 +11,11 @@ if (isset($_GET['login'])) {
 
 function login() {
     checkValidInput();
-    $userid = User::verifyLogin($_POST['username'], $_POST['password']);
+    $username = $_POST['username'];
+    $userid = User::verifyLogin($username, $_POST['password']);
     if ($userid != NULL) {
         $_SESSION['logged'] = $userid;
+        $_SESSION['name'] = $username;
         redirect('tasks.php');
     } else {
         showView('loginview', array('notify' => "Invalid username or password",

@@ -7,4 +7,5 @@ showView('categoryform', array('title' => 'Create new Category',
     'function' => 'categorycreate.php',
     'name' => '',
     'desc' => '',
-    'header' => 'Create New Task'));
+    'header' => 'Create New Category',
+    'button' => 'Create'));

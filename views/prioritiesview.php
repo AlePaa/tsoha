@@ -1,6 +1,6 @@
-<h1>Listing priorities</h1>
+<h1 class="page-header">Listing priorities</h1>
 <div class="attempt">
-    <a href="prioritynew.php">Create new priority</a>
+    <a class="btn btn-default" href="prioritynew.php">New</a>
     <table border="1" cellpadding="10px">
         <thead>
             <tr>
@@ -12,9 +12,13 @@
         <tbody>
             <?php foreach ($data->priorities as $prio): ?>
                 <tr>
-                    <td><a href="prioritydemo.php"><?php echo htmlspecialchars($prio->getName()); ?></a></td>
-                    <td><?php echo htmlspecialchars($prio->getDescription()); ?></td>
-                    <td><?php echo htmlspecialchars($prio->getPriovalue()); ?></td>
+                    <td><?php echo htmlspecialchars($prio->getName()); ?></a></td>
+                    <td><?php echo htmlspecialchars($prio->getDescription()); ?></td> 
+                   <td><?php echo htmlspecialchars($prio->getPriovalue()); ?></td>
+                    <td>
+                        <a class="btn btn-default" href="priorityedit.php?id=<?php echo $prio->getId(); ?>">Edit</a>
+                        <a class="btn btn-danger" href="prioritydelete.php?id=<?php echo $prio->getId(); ?>">Delete</a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
