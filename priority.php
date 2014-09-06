@@ -6,17 +6,35 @@ require_once 'libs/models/PriorityModel.php';
 
 
 if (isset($_GET['list'])) {
+    listPriorities($user);
+} else if (isset($_GET['new'])) {
+    newPriority();
+} else if (isset($_GET['create'])) {
+    createPriority();
+} else if (isset($_GET['edit'])) {
+    editPriority();
+} else if (isset($_GET['update'])) {
+    updatePriority($user);
+} else if (isset($_GET['delete'])) {
+    deletePriority();
+}
+
+function listPriorities($user) {
     $priorities = Priority::getUserPriorities($user);
     showView('prioritiesview', array('title' => "Priorities", 'priorities' => $priorities));
-} else if (isset($_GET['new'])) {
+}
+
+function newPriority() {
     showView('priorityform', array('title' => 'Create new Priority',
-        'function' => 'prioritycreate.php',
+        'function' => 'priority.php?create',
         'name' => '',
         'desc' => '',
         'priovalue' => '0',
         'header' => 'Create New Priority',
         'button' => 'Create'));
-} else if (isset($_GET['create'])) {
+}
+
+function createPriority() {
     $newpriority = new Priority();
     $newpriority->setName($_POST['name']);
     $newpriority->setDescription($_POST['description']);
@@ -24,11 +42,13 @@ if (isset($_GET['list'])) {
 
     if ($newpriority->isValid()) {
         $newpriority->insertIntoDb($_SESSION['logged']);
-        redirect('priorities.php');
+        redirect('priority.php?list');
     } else {
         showView('priorityform', $newTask->getErrors());
     }
-} else if (isset($_GET['edit'])) {
+}
+
+function editPriority() {
     $prioid = $_GET['id'];
 
     if (!is_numeric($prioid)) {
@@ -40,7 +60,7 @@ if (isset($_GET['list'])) {
     if (!$priority == NULL && $priority->isOwner($_SESSION['logged'], $prioid)) {
         showView('priorityform', array('title' => 'Edit Priority',
             'priority' => $priority,
-            'function' => "priorityupdate.php?id=$prioid",
+            'function' => "priority.php?update&id=$prioid",
             'name' => htmlspecialchars($priority->getName()),
             'desc' => htmlspecialchars($priority->getDescription()),
             'priovalue' => htmlspecialchars($priority->getPriovalue()),
@@ -49,20 +69,15 @@ if (isset($_GET['list'])) {
     } else {
         notFound();
     }
+}
 
-    function notFound() {
-        showView("priorities", array('notify' => "Priority not found"));
-    }
-
-} else if (isset($_GET['update'])) {
+function updatePriority($user) {
     $id = (int) $_GET['id'];
 
     $priority = Priority::findPriority($id);
 
-    if ($priority == NULL) {
-        showView('');
-    } else if (!$priority->isOwner($user, $id)) {
-        
+    if ($priority == NULL || !$priority->isOwner($user, $id)) {
+        redirect('priority.php?list');
     } else {
         $priority->setName($_POST['name']);
         $priority->setDescription($_POST['description']);
@@ -70,18 +85,24 @@ if (isset($_GET['list'])) {
 
         if ($priority->isValid()) {
             $priority->update();
-            redirect('priorities.php');
+            redirect('priority.php?list');
         }
     }
-} else if (isset($_GET['delete'])) {
+}
+
+function deletePriority() {
     $prioid = $_GET['id'];
 
     $priority = Priority::findPriority($prioid);
 
     if ($priority->isOwner($_SESSION['logged'])) {
         $priority->delete();
-        redirect('priorities.php');
+        redirect('priority.php?list');
     } else {
-        redirect('priorities.php');
+        redirect('priority.php?list');
     }
+}
+
+function notFound() {
+    redirect('priority?list');
 }
