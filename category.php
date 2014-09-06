@@ -5,17 +5,35 @@ require_once 'libs/session.php';
 require 'libs/models/CategoryModel.php';
 
 if (isset($_GET['list'])) {
+    listCategories($user);
+} else if (isset($_GET['new'])) {
+    newCategory();
+} else if (isset($_GET['create'])) {
+    createCategory();
+} else if (isset($_GET['edit'])) {
+    editCategory();
+} else if (isset($_GET['update'])) {
+    updateCategory($user);
+} else if (isset($_GET['delete'])) {
+    deleteCategory();
+}
+
+function listCategories($user) {
     $categories = Category::getUserCategories($user);
     showView('categoriesview', array('title' => "Categories",
         'categories' => $categories));
-} else if (isset($_GET['new'])) {
+}
+
+function newCategory() {
     showView('categoryform', array('title' => 'Create new Category',
-        'function' => 'categorycreate.php',
+        'function' => 'category.php?create',
         'name' => '',
         'desc' => '',
         'header' => 'Create New Category',
         'button' => 'Create'));
-} else if (isset($_GET['create'])) {
+}
+
+function createCategory() {
     $newcategory = new Category();
     $newcategory->setName($_POST['name']);
     $newcategory->setDescription($_POST['description']);
@@ -23,11 +41,13 @@ if (isset($_GET['list'])) {
 
     if ($newcategory->isValid()) {
         $newcategory->insertIntoDb($_SESSION['logged']);
-        redirect('categories.php');
+        redirect('category.php?list');
     } else {
         showView('categoryform', $newTask->getErrors());
     }
-} else if (isset($_GET['edit'])) {
+}
+
+function editCategory() {
     $categoryid = $_GET['id'];
 
     if (!is_numeric($categoryid)) {
@@ -39,7 +59,7 @@ if (isset($_GET['list'])) {
     if (!$category == NULL && $category->isOwner($_SESSION['logged'], $categoryid)) {
         showView('categoryform', array('title' => 'Edit Category',
             'category' => $category,
-            'function' => "categoryupdate.php?id=$categoryid",
+            'function' => "category.php?update&id=$categoryid",
             'name' => htmlspecialchars($category->getName()),
             'desc' => htmlspecialchars($category->getDescription()),
             'header' => 'Editing Category',
@@ -52,13 +72,15 @@ if (isset($_GET['list'])) {
         showView("tasks", array('notify' => "Task not found"));
     }
 
-} else if (isset($_GET['update'])) {
+}
+
+function updateCategory($user) {
     $id = (int) $_GET['id'];
 
     $category = Category::findCategory($id);
 
     if ($category == NULL) {
-        showView('');
+        redirect('category.php?list');
     } else if (!$category->isOwner($user, $id)) {
         
     } else {
@@ -67,18 +89,20 @@ if (isset($_GET['list'])) {
 
         if ($category->isValid()) {
             $category->update();
-            redirect('categories.php');
+            redirect('category.php?list');
         }
     }
-} else if (isset($_GET['delete'])) {
+}
+
+function deleteCategory() {
     $categoryid = $_GET['id'];
 
     $category = Category::findCategory($categoryid);
 
     if ($category->isOwner($_SESSION['logged'])) {
         $category->delete();
-        redirect('categories.php');
+        redirect('category.php?list');
     } else {
-        redirect('categories.php');
+        redirect('category.php?list');
     }
 }
