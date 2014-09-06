@@ -24,5 +24,4 @@
 
             <button type="submit"><?php echo $data->button ?></button>
     </form>
-    <?php echo $data->add; ?>
 </fieldset>

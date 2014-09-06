@@ -14,7 +14,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="js/bootstrap.min.js"></script>
-        
+
         <nav class="navbar navbar-default" role="navigation">
             <div class="panel panel-default">
                 <?php if (isset($_SESSION['logged'])): ?>
@@ -27,9 +27,9 @@
                                 <li><a href="#">Delete User</a></li>
                             </ul>
                         </li>
-                        <a href="tasks.php">Tasks</a>
-                        <a href="categories.php">Categories</a>
-                        <a href="priorities.php">Priorities</a>
+                        <a href="task.php?list">Tasks</a>
+                        <a href="category.php?list">Categories</a>
+                        <a href="priority.php?list">Priorities</a>
                         </li>
 
                     </ul>

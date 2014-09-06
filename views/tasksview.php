@@ -1,6 +1,6 @@
 <h1 class="page-header">Listing tasks</h1>
 <div class="attempt">
-    <a class="btn btn-default" href="tasknew.php">New</a>
+    <a class="btn btn-default" href="task.php?new">New</a>
     <table border="1" cellpadding="10px" >
         <thead>
             <tr>
@@ -20,8 +20,8 @@
                     <td><?php echo htmlspecialchars($task->getDeadline()); ?></td>
                     <td><?php echo htmlspecialchars($task->getDescription()); ?></td>
                     <td>
-                        <a class="btn btn-default" href="taskedit.php?id=<?php echo $task->getId(); ?>">Edit</a>
-                        <a class="btn btn-danger" href="taskdelete.php?id=<?php echo $task->getId(); ?>">Delete</a>
+                        <a class="btn btn-default" href="task.php?edit&id=<?php echo $task->getId(); ?>">Edit</a>
+                        <a class="btn btn-danger" href="task.php?delete&id=<?php echo $task->getId(); ?>">Delete</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

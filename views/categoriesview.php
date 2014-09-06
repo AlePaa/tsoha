@@ -1,6 +1,6 @@
 <h1 class="page-header">Listing categories</h1>
 <div class="attempt">
-    <a class="btn btn-default" href="categorynew.php">New</a>
+    <a class="btn btn-default" href="category.php?new">New</a>
     <table border="1" cellpadding="10px">
         <thead>
             <tr>
@@ -16,8 +16,8 @@
                     <td><?php echo htmlspecialchars($category->getPriority()); ?></td>
                     <td><?php echo htmlspecialchars($category->getDescription()); ?></td>
                     <td>
-                        <a class="btn btn-default" href="categoryedit.php?id=<?php echo $category->getId(); ?>">Edit</a>
-                        <a class="btn btn-danger" href="categorydelete.php?id=<?php echo $category->getId(); ?>">Delete</a>
+                        <a class="btn btn-default" href="category.php?edit&id=<?php echo $category->getId(); ?>">Edit</a>
+                        <a class="btn btn-danger" href="category.php?delete&id=<?php echo $category->getId(); ?>">Delete</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

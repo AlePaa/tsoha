@@ -16,7 +16,7 @@ function login() {
     if ($userid != NULL) {
         $_SESSION['logged'] = $userid;
         $_SESSION['name'] = $username;
-        redirect('tasks.php');
+        redirect('task.php?list');
     } else {
         showView('loginview', array('notify' => "Invalid username or password",
             'title' => 'login to Muistilista'));
