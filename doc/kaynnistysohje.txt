@@ -1,0 +1,6 @@
+Sovellus on asennettuna osoitteessa
+http://alpa.users.cs.helsinki.fi/tsoha/
+
+Sisään voi kirjautua:
+Nimimerkki: admin
+salasana: eioikeesti
