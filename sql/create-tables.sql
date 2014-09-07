@@ -16,7 +16,6 @@ PRIMARY KEY (id)
 CREATE TABLE categories (
 user_id bigint references users(id) ON DELETE cascade,
 id bigserial,
-parent bigint NULL,
 priority_id bigint references priorities(id) NULL,
 name varchar(40) NOT NULL,
 description varchar(500) NULL,
@@ -26,7 +25,6 @@ PRIMARY KEY(id)
 CREATE TABLE tasks (
 user_id bigint references users(id) ON DELETE cascade,
 id bigserial,
-category_id bigint references categories(id) NULL,
 priority_id bigint references priorities(id) NULL,
 name varchar(40) NOT NULL,
 description varchar(500) NULL,
@@ -35,7 +33,7 @@ PRIMARY KEY(id)
 );
 
 CREATE TABLE ctjuncts (
-category_id bigint references categories(id) ON DELETE cascade,
-task_id bigint references taks(id) ON DELETE cascade,
+category_id bigint REFERENCES categories(id),
+task_id bigint REFERENCES tasks(id),
 PRIMARY KEY(category_id, task_id)
 );

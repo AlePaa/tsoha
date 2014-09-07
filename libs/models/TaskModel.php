@@ -1,11 +1,9 @@
 <?php
 
-include 'Model.php';
-include 'DataObject.php';
+require_once 'Model.php';
 
-Class Task extends Model implements DataObject {
+Class Task extends Model {
 
-    private $category;
     private $priority;
     private $deadline;
 
@@ -17,15 +15,14 @@ Class Task extends Model implements DataObject {
         $new = new Task();
         $new->builds($result);
         $new->setPriority($result->priority_id);
-        $new->setCategory($result->category_id);
         $new->setDeadline($result->deadline);
         return $new;
     }
 
     public function update() {
-        $sql = "UPDATE Tasks SET name = ?, description = ?, category_id = ?, priority_id = ?, deadline = ? WHERE id = ?";
+        $sql = "UPDATE Tasks SET name = ?, description = ?, priority_id = ?, deadline = ? WHERE id = ?";
         $query = getDbConnection()->prepare($sql);
-        $ok = $query->execute(array($this->name, $this->description, $this->category, $this->priority, $this->deadline, $this->id));
+        $ok = $query->execute(array($this->name, $this->description, $this->priority, $this->deadline, $this->id));
         if ($ok) {
             $this->id = $query->fetchColumn();
             return $ok;
@@ -62,9 +59,9 @@ Class Task extends Model implements DataObject {
     }
 
     public function insertIntoDb($userid) {
-        $sql = "INSERT INTO Tasks(user_id, category_id, priority_id, name, description, deadline) VALUES(?,1,1,?,?,?) RETURNING id";
+        $sql = "INSERT INTO Tasks(user_id, priority_id, name, description, deadline) VALUES(?,?,?,?,?) RETURNING id";
         $query = getDbConnection()->prepare($sql);
-        $ok = $query->execute(array($userid, $this->name, $this->description, $this->deadline));
+        $ok = $query->execute(array($userid, $this->priority, $this->name, $this->description, $this->deadline));
         if ($ok) {
             $this->id = $query->fetchColumn();
         }
@@ -73,31 +70,15 @@ Class Task extends Model implements DataObject {
 
     /* Task specific setters and getters */
 
-    public function setCategory($c) {
-        if (empty($c)) {
-            
-        } else {
-            $this->category = trim($c);
-        }
-    }
-
     public function setPriority($p) {
-        if (empty($p)) {
-            
-        } else {
-            $this->priority = ($p);
-        }
+        $this->priority = $p;
     }
 
     public function setDeadline($d) {
-        if (empty($d)) {
-            
-        } else {
-            $this->deadline = trim($d);
-        }
+        $this->deadline = trim($d);
     }
 
-    public function getCategory() {
+    public function getCategories() {
         $query = getDbConnection()->prepare("SELECT name FROM Categories WHERE id = '$this->category'");
         $query->execute();
         $return = $query->fetchColumn();
@@ -114,6 +95,37 @@ Class Task extends Model implements DataObject {
 
     public function getDeadline() {
         return $this->deadline;
+    }
+
+    public function getTaskCategories() {
+        /* Returns all Categories that are linked to this Task through the ctjuncts table */
+        $sql = "SELECT * FROM Categories WHERE id IN(SELECT category_id from ctjuncts WHERE task_id = '$this->id')";
+        $query = getDbConnection()->prepare($sql);
+        $results = array();
+        if ($query->execute()) {
+            foreach ($query->fetchAll(PDO::FETCH_OBJ) as $result) {
+                $results[] = Category::build($result);
+            }
+            return $results;
+        } else {
+            return NULL;
+        }
+    }
+
+    public function addLink($category_id) {
+        $sql = "INSERT INTO Ctjuncts(category_id, task_id) VALUES(?,?) RETURNING category_id";
+        $query = getDbConnection()->prepare($sql);
+        $ok = $query->execute(array($category_id, $this->id));
+        if ($ok) {
+            $this->id = $query->fetchColumn();
+        }
+        return $ok;
+    }
+
+    public function removeLink($category_id) {
+        $sql = "DELETE from Ctjuncts WHERE category_id = '$category_id' AND task_id = '$this->id'";
+        $query = getDbConnection()->prepare($sql);
+        return $query->execute();
     }
 
 }

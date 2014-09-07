@@ -1,6 +1,6 @@
 <h1 class="page-header">Listing categories</h1>
-<div class="attempt">
-    <a class="btn btn-default" href="category.php?new">New</a>
+<div class="container">
+    <a class="form-control btn btn-default" href="category.php?new">New</a>
     <table border="1" cellpadding="10px">
         <thead>
             <tr>

@@ -6,16 +6,10 @@ class User {
     private $username;
     private $password;
 
-    public function __construct($id, $u, $p) {
-        $this->id = $id;
-        $this->username = $u;
-        $this->password = $p;
-    }
-
     public function insertIntoDb() {
-        $sql = "INSERT INTO Users(id, nick, password) VALUES(?,?,?) RETURNING id";
+        $sql = "INSERT INTO Users(nick, password) VALUES(?,?) RETURNING id";
         $query = getDbConnection()->prepare($sql);
-        $ok = $query->execute(array($this->id, $this->username, $this->password));
+        $ok = $query->execute(array($this->username, $this->password));
         if ($ok) {
             $this->id = $query->fetchColumn();
         }
@@ -41,20 +35,37 @@ class User {
 
         $results = array();
         foreach ($query->fetchAll(PDO::FETCH_OBJ) as $result) {
-            $results[] = new User($result->id, $result->nick, $result->password);
+            $user = new User();
+            $user->setId($result->id);
+            $user->setUsername($result->nick);
+            $user->setPassword($result->password);
+            $results[] = $user;
         }
         return $results;
+    }
+
+    public static function delete($id) {
+        $sql = "DELETE from Users WHERE id = '$id'";
+        $query = getDbConnection()->prepare($sql);
+        return $query->execute();
+    }
+
+    public static function exists($name) {
+        $sql = "SELECT exists(SELECT 1 from Users WHERE nick = $name LIMIT 1)";
+        $query = getDbConnection()->prepare($sql);
+        $exists = $query->execute();
+        return $exists;
     }
 
     private function setId($i) {
         $this->id = $i;
     }
 
-    private function setUsername($n) {
+    public function setUsername($n) {
         $this->username = $n;
     }
 
-    private function setPassword($p) {
+    public function setPassword($p) {
         $this->password = $p;
     }
 

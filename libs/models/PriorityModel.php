@@ -1,6 +1,6 @@
 <?php
 
-include 'Model.php';
+require_once 'Model.php';
 
 Class Priority extends Model {
 
@@ -70,7 +70,7 @@ Class Priority extends Model {
 
     public function setPriovalue($p) {
         if ($p < 0) {
-        $this->errors[] = "Priority value can't be negative";    
+            $this->errors[] = "Priority value can't be negative!";
         }
         $this->priovalue = $p;
     }

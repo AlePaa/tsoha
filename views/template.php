@@ -10,9 +10,7 @@
     </head>
 
     <body class="graybody">
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="js/bootstrap.min.js"></script>
 
         <nav class="navbar navbar-default" role="navigation">
@@ -23,15 +21,13 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Logged in as <?php echo $_SESSION['name']; ?>
                                 <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="login.php?logout">Logout</a></li>
-                                <li><a href="#">Delete User</a></li>
+                                <li><a class="btn btn-default" href="login.php?logout">Logout</a></li>
+                                <li><a class="btn btn-danger" href="user.php?delete">Delete User</a></li>
                             </ul>
                         </li>
                         <a href="task.php?list">Tasks</a>
                         <a href="category.php?list">Categories</a>
                         <a href="priority.php?list">Priorities</a>
-                        </li>
-
                     </ul>
                 <?php endif ?>
             </div>

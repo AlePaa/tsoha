@@ -12,3 +12,7 @@ function redirect($page) {
     header("Location: $page");
     exit();
 }
+
+function s($s) {
+    return htmlspecialchars($s);
+}

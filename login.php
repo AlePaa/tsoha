@@ -1,7 +1,7 @@
 <?php
 
 require_once 'libs/common.php';
-include 'libs/models/UserModel.php';
+include_once 'libs/models/UserModel.php';
 
 if (isset($_GET['login'])) {
     login();

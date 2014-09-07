@@ -36,15 +36,15 @@ function newPriority() {
 
 function createPriority() {
     $newpriority = new Priority();
-    $newpriority->setName($_POST['name']);
-    $newpriority->setDescription($_POST['description']);
-    $newpriority->setPriovalue($_POST['priovalue']);
+    $newpriority->setName(s($_POST['name']));
+    $newpriority->setDescription(s($_POST['description']));
+    $newpriority->setPriovalue(s($_POST['priovalue']));
 
     if ($newpriority->isValid()) {
         $newpriority->insertIntoDb($_SESSION['logged']);
         redirect('priority.php?list');
     } else {
-        showView('priorityform', $newTask->getErrors());
+        redirect('priority.php?new');
     }
 }
 
@@ -61,9 +61,9 @@ function editPriority() {
         showView('priorityform', array('title' => 'Edit Priority',
             'priority' => $priority,
             'function' => "priority.php?update&id=$prioid",
-            'name' => htmlspecialchars($priority->getName()),
-            'desc' => htmlspecialchars($priority->getDescription()),
-            'priovalue' => htmlspecialchars($priority->getPriovalue()),
+            'name' => s($priority->getName()),
+            'desc' => s($priority->getDescription()),
+            'priovalue' => s($priority->getPriovalue()),
             'header' => 'Editing Priority',
             'button' => 'Update'));
     } else {
@@ -79,12 +79,14 @@ function updatePriority($user) {
     if ($priority == NULL || !$priority->isOwner($user, $id)) {
         redirect('priority.php?list');
     } else {
-        $priority->setName($_POST['name']);
-        $priority->setDescription($_POST['description']);
-        $priority->setPriovalue($_POST['priovalue']);
+        $priority->setName(s($_POST['name']));
+        $priority->setDescription(s($_POST['description']));
+        $priority->setPriovalue(s($_POST['priovalue']));
 
         if ($priority->isValid()) {
             $priority->update();
+            redirect('priority.php?list');
+        } else {
             redirect('priority.php?list');
         }
     }
@@ -104,5 +106,5 @@ function deletePriority() {
 }
 
 function notFound() {
-    redirect('priority?list');
+    redirect('priority.php?list');
 }

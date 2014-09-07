@@ -3,20 +3,26 @@
 require_once 'libs/common.php';
 require_once 'libs/session.php';
 include 'libs/models/TaskModel.php';
+include 'libs/models/PriorityModel.php';
+include 'libs/models/CategoryModel.php';
 
 if (isset($_GET['list'])) {
     listTasks($user);
 }
 if (isset($_GET['new'])) {
-    newTask();
+    newTask($user);
 } else if (isset($_GET['create'])) {
     createTask();
 } else if (isset($_GET['edit'])) {
-    editTask();
+    editTask($user);
 } else if (isset($_GET['update'])) {
     updateTask($user);
+} else if (isset($_GET['add'])) {
+    addLink($user);
 } else if (isset($_GET['delete'])) {
     deleteTask();
+} else if (isset($_GET['remove'])) {
+    removeLink($user);
 }
 
 function listTasks($user) {
@@ -25,9 +31,13 @@ function listTasks($user) {
         'title' => "Tasks"));
 }
 
-function newTask() {
+function newTask($user) {
+    $categories = Category::getUserCategories($user);
+    $priorities = Priority::getUserPriorities($user);
     showView('taskform', array('title' => 'Create new Task',
         'function' => 'task.php?create',
+        'categories' => $categories,
+        'priorities' => $priorities,
         'name' => '',
         'desc' => '',
         'dead' => '',
@@ -37,20 +47,22 @@ function newTask() {
 
 function createTask() {
     $newTask = new Task();
-    $newTask->setName($_POST['name']);
-    $newTask->setDescription($_POST['description']);
-    $newTask->setPriority($_POST['priority']);
+    $newTask->setName(s($_POST['name']));
+    $newTask->setDescription(s($_POST['description']));
+    if (isset($_POST['priority'])) {
+        $newTask->setPriority($_POST['priority']);
+    }
     $newTask->setDeadline($_POST['deadline']);
 
     if ($newTask->isValid()) {
         $newTask->insertIntoDb($_SESSION['logged']);
         redirect('task.php?list');
     } else {
-        showView('newtaskform', $newTask->getErrors());
+        redirect('task.php?new');
     }
 }
 
-function editTask() {
+function editTask($user) {
     $taskid = $_GET['id'];
 
     if (!is_numeric($taskid)) {
@@ -59,13 +71,19 @@ function editTask() {
         $task = Task::findTask($taskid);
     }
 
+    $categories = Category::getUserCategories($user);
+    $priorities = Priority::getUserPriorities($user);
+    $taskcategories = $task->getTaskCategories();
     if (!$task == NULL && $task->isOwner($_SESSION['logged'], $taskid)) {
         showView('taskform', array('title' => 'Edit Task',
             'task' => $task,
             'function' => "task.php?update&id=$taskid",
-            'name' => htmlspecialchars($task->getName()),
-            'desc' => htmlspecialchars($task->getDescription()),
-            'dead' => htmlspecialchars($task->getDeadline()),
+            'categories' => $categories,
+            'priorities' => $priorities,
+            'taskcategories' => $taskcategories,
+            'name' => s($task->getName()),
+            'desc' => s($task->getDescription()),
+            'dead' => s($task->getDeadline()),
             'header' => 'Editing Task',
             'button' => 'Update'));
     } else {
@@ -81,12 +99,15 @@ function updateTask($user) {
     if ($task == NULL || !$task->isOwner($user, $id)) {
         redirect('task.php?list');
     } else {
-        $task->setName($_POST['name']);
-        $task->setDescription($_POST['description']);
+        $task->setName(s($_POST['name']));
+        $task->setDescription(s($_POST['description']));
         $task->setDeadline($_POST['deadline']);
+        $task->setPriority($_POST['priority']);
 
         if ($task->isValid()) {
             $task->update();
+            redirect('task.php?list');
+        } else {
             redirect('task.php?list');
         }
     }
@@ -101,10 +122,34 @@ function deleteTask() {
         $task->delete();
         redirect('task.php?list');
     } else {
-        redirect('tasks.php?list');
+        redirect('task.php?list');
+    }
+}
+
+function addLink($user) {
+    $category = s($_POST['category']);
+    $taskid = s($_POST['id']);
+    $task = Task::findTask($taskid);
+    if ($task->isOwner($user)) {
+        $task->addLink($category);
+        redirect('task.php?list');
+    } else {
+        redirect('task.php?list');
+    }
+}
+
+function removeLink($user) {
+    $taskid = $_GET['id'];
+    $task = Task::findTask($taskid);
+
+    if ($task->isOwner($user)) {
+        $task->removeLink();
+        redirect('task.php?edit&id=$taskid');
+    } else {
+        redirect('task.php?edit&id=$taskid');
     }
 }
 
 function notFound() {
-    showView("tasks", array('notify' => "Task not found"));
+    redirect('task.php?list');
 }

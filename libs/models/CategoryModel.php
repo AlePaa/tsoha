@@ -1,9 +1,9 @@
 <?php
 
-include 'Model.php';
-include 'DataObject.php';
+require_once 'Model.php';
+require_once 'TaskModel.php';
 
-Class Category extends Model implements DataObject {
+Class Category extends Model {
 
     private $parent_id;
     private $priority_id;
@@ -24,7 +24,6 @@ Class Category extends Model implements DataObject {
     public static function build($result) {
         $new = new Category();
         $new->builds($result);
-        $new->setParent($result->parent);
         $new->setPriority($result->priority_id);
         return $new;
     }
@@ -80,7 +79,44 @@ Class Category extends Model implements DataObject {
     }
 
     public function getPriority() {
-        return $this->priority_id;
+        $query = getDbConnection()->prepare("SELECT name FROM Priorities WHERE id = '$this->priority_id'");
+        $query->execute();
+        $return = $query->fetchColumn();
+
+        return $return;
+    }
+
+    /* ctjuncts related getter, adder and deleter */
+
+    public function getCategoryTasks() {
+        /* Returns all Tasks that are linked to this Category through the ctjuncts table */
+        $sql = "SELECT * FROM Tasks WHERE id IN(SELECT task_id from ctjuncts WHERE category_id = '$this->id')";
+        $query = getDbConnection()->prepare($sql);
+        $results = array();
+        if ($query->execute()) {
+            foreach ($query->fetchAll(PDO::FETCH_OBJ) as $result) {
+                $results[] = Task::build($result);
+            }
+            return $results;
+        } else {
+            return NULL;
+        }
+    }
+
+    public function addLink($task_id) {
+        $sql = "INSERT INTO ctjuncts(category_id = ?, user_id = ?) RETURNING category_id";
+        $query = getDbConnection()->prepare($sql);
+        $ok = $query->execute(array($this->id, $task_id));
+        if ($ok) {
+            $this->id = $query->fetchColumn();
+        }
+        return $ok;
+    }
+
+    public function removeLink($task_id) {
+        $sql = "DELETE from ctjuncts WHERE (task_id = '$task_id' AND category_id = '$this->id')";
+        $query = getDbConnection()->prepare($sql);
+        return $query->execute();
     }
 
 }

@@ -2,16 +2,17 @@
 
 require_once 'libs/common.php';
 require_once 'libs/session.php';
-require 'libs/models/CategoryModel.php';
+include 'libs/models/CategoryModel.php';
+include 'libs/models/PriorityModel.php';
 
 if (isset($_GET['list'])) {
     listCategories($user);
 } else if (isset($_GET['new'])) {
-    newCategory();
+    newCategory($user);
 } else if (isset($_GET['create'])) {
     createCategory();
 } else if (isset($_GET['edit'])) {
-    editCategory();
+    editCategory($user);
 } else if (isset($_GET['update'])) {
     updateCategory($user);
 } else if (isset($_GET['delete'])) {
@@ -24,9 +25,11 @@ function listCategories($user) {
         'categories' => $categories));
 }
 
-function newCategory() {
+function newCategory($user) {
+    $priorities = Priority::getUserPriorities($user);
     showView('categoryform', array('title' => 'Create new Category',
         'function' => 'category.php?create',
+        'priorities' => $priorities,
         'name' => '',
         'desc' => '',
         'header' => 'Create New Category',
@@ -35,43 +38,41 @@ function newCategory() {
 
 function createCategory() {
     $newcategory = new Category();
-    $newcategory->setName($_POST['name']);
-    $newcategory->setDescription($_POST['description']);
-    $newcategory->setPriority($_POST['priority']);
+    $newcategory->setName(htmlspecialchars($_POST['name']));
+    $newcategory->setDescription(htmlspecialchars($_POST['description']));
+    $newcategory->setPriority(htmlspecialchars($_POST['priority']));
 
     if ($newcategory->isValid()) {
         $newcategory->insertIntoDb($_SESSION['logged']);
         redirect('category.php?list');
     } else {
-        showView('categoryform', $newTask->getErrors());
+        redirect('category.php?new');
     }
 }
 
-function editCategory() {
+function editCategory($user) {
     $categoryid = $_GET['id'];
 
     if (!is_numeric($categoryid)) {
         notFound();
     } else {
         $category = Category::findCategory($categoryid);
+        $tasks = $category->getCategoryTasks();
     }
-
+    $priorities = Priority::getUserPriorities($user);
     if (!$category == NULL && $category->isOwner($_SESSION['logged'], $categoryid)) {
         showView('categoryform', array('title' => 'Edit Category',
             'category' => $category,
+            'tasks' => $tasks,
             'function' => "category.php?update&id=$categoryid",
-            'name' => htmlspecialchars($category->getName()),
-            'desc' => htmlspecialchars($category->getDescription()),
+            'priorities' => $priorities,
+            'name' => s($category->getName()),
+            'desc' => s($category->getDescription()),
             'header' => 'Editing Category',
             'button' => 'Update'));
     } else {
         notFound();
     }
-
-    function notFound() {
-        showView("tasks", array('notify' => "Task not found"));
-    }
-
 }
 
 function updateCategory($user) {
@@ -84,8 +85,9 @@ function updateCategory($user) {
     } else if (!$category->isOwner($user, $id)) {
         
     } else {
-        $category->setName($_POST['name']);
-        $category->setDescription($_POST['description']);
+        $category->setName(s($_POST['name']));
+        $category->setDescription(s($_POST['description']));
+        $category->setPriority(s($_POST['priority']));
 
         if ($category->isValid()) {
             $category->update();
@@ -105,4 +107,8 @@ function deleteCategory() {
     } else {
         redirect('category.php?list');
     }
+}
+
+function notFound() {
+    redirect('category.php?list');
 }
